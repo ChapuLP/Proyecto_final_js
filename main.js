@@ -41,6 +41,10 @@ let montoReal = document.getElementById("entryReal");
 let montoSPX = document.getElementById("entrySPX");
 let btnSPX = document.getElementById("btnSPX");
 
+//Varibles para el JSON
+let valor_live_dolar = document.getElementById("priceDolar");
+let valor_live_euro = document.getElementById("priceEuro");
+let valor_live_real = document.getElementById("priceReal");
 // Variables y constantes
 
 let monto;
@@ -52,11 +56,28 @@ let confirmacion;
 //obejtos 
 const divisas = {
     Dolares : 0,
-    Euros : 0,
+    Euros : 0.,
     Reales : 0,
 };
+let billetera ;
+
 // Almacenamiento, Local Storage
 localStorage.setItem("Divisas",JSON.stringify(divisas));
+//FETCH
+const traerValores = async () => {
+  const response = await fetch("./valores.json");
+  const data = await response.json();
+
+  precioDolar = data[0];
+  valor_live_dolar.innerText = precioDolar.valor;
+  precioEuro = data[1];
+  valor_live_euro.innerText = precioEuro.valor;
+  precioReal = data[2];
+  valor_live_real.innerText = precioReal.valor;
+
+}; 
+
+traerValores();
 
 //evento buttons comprar divisas
 btnEU.addEventListener("click", () => {
@@ -67,7 +88,7 @@ btnEU.addEventListener("click", () => {
         divisas.Euros = divisas.Euros + parseFloat(montoEuro.value);
         console.log(`Sumando compra a su billetera de divisas...`);
         alert(`Compra realizada,usted posee ${divisas.Euros} Euros, muchas gracias.`);
-        localStorage.setItem("Divisas",JSON.stringify(divisas));
+        billetera = localStorage.setItem("Billetera",JSON.stringify(divisas));
         montoEuro.value = 0; 
         Toastify({
             text: "Euros añadidos exitosamente",
@@ -104,7 +125,7 @@ btnEU.addEventListener("click", () => {
         divisas.Dolares = divisas.Dolares + parseFloat(montoDolar.value);
         console.log(`Sumando compra a su billetera de divisas...`);
         alert(`Compra realizada,usted posee ${divisas.Dolares} USD, muchas gracias.`);
-        localStorage.setItem("Divisas",JSON.stringify(divisas));
+        billetera = localStorage.setItem("Billetera",JSON.stringify(divisas));
         montoDolar.value = 0; 
         Toastify({
             text: "Dolares añadidos exitosamente",
@@ -141,7 +162,7 @@ btnEU.addEventListener("click", () => {
         divisas.Reales = divisas.Reales + parseFloat(montoReal.value);
         console.log(`Sumando compra a su billetera de divisas...`);
         alert(`Compra realizada,usted posee ${divisas.Reales} Reales, muchas gracias.`);
-        localStorage.setItem("Divisas",JSON.stringify(divisas));
+        billetera = localStorage.setItem("Billetera",JSON.stringify(divisas));
         montoReal.value = 0; 
         Toastify({
             text: "Reales añadidos exitosamente",
